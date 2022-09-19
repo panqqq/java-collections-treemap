@@ -10,82 +10,88 @@ public class StudentMap implements Map<Student, Integer> {
     private CustomTreeMap customTreeMap = new CustomTreeMap();
 
 
-
+    //Constructs a new, empty tree map, using the natural ordering of its keys.
     public StudentMap() {
 
     }
+    //Constructs a new tree map containing the same mappings as the given map, ordered according to the natural ordering of its keys.
+    public StudentMap(Map<? extends Student, ? extends Integer> map) {
+        putAll(map);
+    }
+    //Constructs a new, empty tree map, ordered according to the given comparator.
 
+    //Constructs a new tree map containing the same mappings and using the same ordering as the specified sorted map.
 
     @Override
     public int size() {
+        //Works
         return customTreeMap.size();
     }
 
     @Override
     public boolean isEmpty() {
-        //TODO
-        // - Done
+        //Works
         return customTreeMap.isEmpty();
     }
 
     @Override
     public boolean containsKey(Object o) {
-        //TODO
-        Student student = (Student) o;
-        return customTreeMap.containsNode(student);
+        //Works
+        Student key = (Student) o;
+        return customTreeMap.containsKey(key);
     }
 
     @Override
     public boolean containsValue(Object o) {
-        //TODO
+        //Works
         Integer value = (Integer) o;
-        //!!
-        return false;
+        return customTreeMap.containsValue(value);
     }
 
     @Override
     public Integer get(Object o) {
-        //TODO
-        return null;
+        //Works
+        Student key = (Student) o;
+        return customTreeMap.get(key);
     }
 
     @Override
     public Integer put(Student student, Integer integer) {
-        //TODO
-        return customTreeMap.put(student,integer);
+        //Works
+        return customTreeMap.addToNode(student, integer);
     }
 
     @Override
     public Integer remove(Object o) {
-        //TODO
+        //Works
         Student student = (Student) o;
-
-        return null;
+        return customTreeMap.delete(student);
     }
 
     @Override
     public void putAll(Map<? extends Student, ? extends Integer> map) {
-        //TODO
+        //Works
+        for (Entry<? extends Student, ? extends Integer> entry : map.entrySet()) {
+            put(entry.getKey(), entry.getValue());
+        }
     }
 
     @Override
     public void clear() {
-        //TODO
-        customTreeMap = new CustomTreeMap();
+        //Works
+        customTreeMap.clearRoot();
     }
 
     @Override
     public Set<Student> keySet() {
-        //TODO
-        LinkedHashSet<Student> set = customTreeMap.traverseForKeys();
-        return set;
+        //Works
+        return customTreeMap.keySet();
     }
 
     @Override
     public Collection<Integer> values() {
-        //TODO
-        Collection<Integer> set = customTreeMap.traverseForValues();
-        return set;
+        //Works
+        return customTreeMap.values();
     }
 
     @Override
@@ -97,5 +103,5 @@ public class StudentMap implements Map<Student, Integer> {
     public void traverse() {
         customTreeMap.traverse();
     }
-}
 
+}
