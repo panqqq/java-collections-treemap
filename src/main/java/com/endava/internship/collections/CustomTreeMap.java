@@ -42,7 +42,6 @@ public class CustomTreeMap{
             parent = current;
             if (current.key.compareTo(key) == 0) {
                 //Replace values
-                //TODO
                 previousValue = current.value;
                 current.value = value;
                 return previousValue;

@@ -23,7 +23,7 @@ public class Student implements Comparable<Student>//TODO consider implementing 
     @Override
     public int compareTo(Student student) {
         if(getName().equals(student.getName())) {
-            return -(dateOfBirth.compareTo(student.dateOfBirth));
+            return dateOfBirth.compareTo(student.dateOfBirth);
         }
         return getName().compareTo(student.getName());
     }
