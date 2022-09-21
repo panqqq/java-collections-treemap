@@ -198,6 +198,7 @@ public class CustomTreeMap{
 
     public void clearRoot() {
         root = null;
+        size = 0;
     }
 
     private void traverseInOrder(Node node) {

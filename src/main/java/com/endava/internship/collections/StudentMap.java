@@ -2,7 +2,6 @@ package com.endava.internship.collections;
 
 
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,6 +33,8 @@ public class StudentMap implements Map<Student, Integer> {
 
     @Override
     public boolean containsKey(Object o) {
+        validateNullPointerException(o);
+        validateClassCastException(o);
         Student key = (Student) o;
         return customTreeMap.containsKey(key);
     }
@@ -46,23 +47,32 @@ public class StudentMap implements Map<Student, Integer> {
 
     @Override
     public Integer get(Object o) {
+        validateNullPointerException(o);
+        validateClassCastException(o);
         Student key = (Student) o;
         return customTreeMap.get(key);
     }
 
     @Override
     public Integer put(Student student, Integer integer) {
+        validateNullPointerException(student);
+        validateClassCastException(student);
         return customTreeMap.addToNode(student, integer);
     }
 
     @Override
     public Integer remove(Object o) {
+        validateNullPointerException(o);
+        validateClassCastException(o);
         Student student = (Student) o;
         return customTreeMap.delete(student);
     }
 
     @Override
     public void putAll(Map<? extends Student, ? extends Integer> map) {
+        if(map == null) {
+          throw new NullPointerException();
+        }
         for (Entry<? extends Student, ? extends Integer> entry : map.entrySet()) {
             put(entry.getKey(), entry.getValue());
         }
@@ -92,5 +102,26 @@ public class StudentMap implements Map<Student, Integer> {
     public void traverse() {
         customTreeMap.traverse();
     }
+
+    private static void validateNullPointerException(Object o) {
+        if(o == null) {
+            throw new NullPointerException();
+        }
+    }
+
+    private static void validateClassCastException(Object o) {
+        if(!(o instanceof Student)) {
+            throw new ClassCastException();
+        }
+    }
+
+    public static class NullPointerException extends RuntimeException {
+
+    }
+
+    public static class ClassCastException extends RuntimeException {
+
+    }
+
 
 }
