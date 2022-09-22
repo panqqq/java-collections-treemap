@@ -22,10 +22,9 @@ public class Student implements Comparable<Student>//TODO consider implementing 
 
     @Override
     public int compareTo(Student student) {
-       if(getName().equals(student.getName())) {
-           return student.getAges() - getAges(); //changed opposite to insert older ones to the left node
-       }
-       //return getName().hashCode() - student.getName().hashCode();
+        if(getName().equals(student.getName())) {
+            return dateOfBirth.compareTo(student.dateOfBirth);
+        }
         return getName().compareTo(student.getName());
     }
 
@@ -54,7 +53,7 @@ public class Student implements Comparable<Student>//TODO consider implementing 
                 "name='" + name + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
                 ", details='" + details + '\'' +
-               //", age=" + age +
+                //", age=" + age +
                 //", hashName=" + name.hashCode() +
                 '}';
     }

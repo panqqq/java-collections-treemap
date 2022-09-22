@@ -1,49 +1,206 @@
 package com.endava.internship.collections;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
+import java.util.*;
 
 public class CustomTreeMap{
     private Node root;
-    private LinkedHashSet<Student> setForKeys;
-    private Collection<Integer> collectionForValues;
-    private Integer valueInside;
     private int size = 0;
-    private boolean changedSize = true;
 
-    //Add new element
-    private Node addRecursive(Node current, Student student, Integer age) {
-        if (current == null) {
-            valueInside = age;
-            return new Node(student, age);
+    class Node {
+        private Student key;
+        private Integer value;
+        private Node left;
+        private Node right;
+
+        public Node(Student key, Integer value) {
+            size += 1;
+            this.key = key;
+            this.value = value;
+            this.left = null;
+            this.right = null;
         }
 
-        if (student.compareTo(current.student) < 0) {
-            current.left = addRecursive(current.left, student, age);
-        } else if (student.compareTo(current.student) > 0) {
-            current.right = addRecursive(current.right, student, age);
-        } else {
-            // student already exists
-            valueInside = current.age;
-            current.age = age;
+        @Override
+        public String toString() {
+            return "Node{" +
+                    "key=" + key +
+                    ", value=" + value +
+                    '}';
+        }
+    }
+    //Add new Node
+    public Integer addToNode(Student key, Integer value) {
+        if (root == null) {
+            root = new Node(key, value);
+            return null;
+        }
+
+        Node current = root;
+        Node parent;
+        Integer previousValue;
+        while (true) {
+            parent = current;
+            if (current.key.compareTo(key) == 0) {
+                //Replace values
+                previousValue = current.value;
+                current.value = value;
+                return previousValue;
+            } else if (current.key.compareTo(key) > 0) {
+                current = current.left;
+                if (current == null) {
+                    parent.left = new Node(key, value);
+                    return null;
+                }
+            } else if (current.key.compareTo(key) < 0) {
+                current = current.right;
+                if (current == null) {
+                    parent.right = new Node(key, value);
+                    return null;
+                }
+            } else  //Should this be maintained??
+                return null;
+        }
+    }
+
+
+
+    public boolean containsKey(Student key) {
+        Node current = root;
+        while (current != null) {
+            if (current.key.compareTo(key) == 0) {
+                return true;
+            }
+            if (current.key.compareTo(key) > 0) {
+                current = current.left;
+            } else if (current.key.compareTo(key) < 0) {
+                current = current.right;
+            }
+        }
+        return false;
+    }
+
+    private Node deleteRecursive(Node current, Student key) {
+        if (current == null) {
+            return null;
+        }
+
+        if (key == current.key) {
+            // Node to delete found
+            //Case 1: the node is a leaf node
+            if (current.left == null && current.right == null) {
+                return null;
+            }
+
+            //Case 2: the node has one child
+            if (current.right == null) {
+                return current.left;
+            }
+
+            if (current.left == null) {
+                return current.right;
+            }
+
+            //Case 3: the node has two children
+            Student smallestKey = findSmallestKey(current.right);
+            current.key = smallestKey;
+            current.right = deleteRecursive(current.right, smallestKey);
             return current;
         }
-
+        if (current.key.compareTo(key) > 0) {
+            current.left = deleteRecursive(current.left, key);
+            return current;
+        }
+        current.right = deleteRecursive(current.right, key);
         return current;
     }
 
-    public void add(Student key, Integer age) {
-        root = addRecursive(root, key, age);
+    public Integer delete(Student key) {
+        Node node = getNode(key);
+        if(node != null ) {
+            size -= 1;
+            root = deleteRecursive(root, key);
+            return node.value;
+        }
+        return null;
     }
 
-    public Integer put(Student key, Integer age) {
-        add(key,age);
-        Integer val = valueInside;
-        valueInside = null;
-        return val;
+    private Student findSmallestKey(Node root) {
+        return root.left == null ? root.key : findSmallestKey(root.left);
     }
 
-    //Traverse Tree
+    public Integer get(Student key) {
+        Node current = root;
+        while (current != null) {
+            if (current.key.compareTo(key) == 0) {
+                return current.value;
+            }
+            if (current.key.compareTo(key) > 0) {
+                current = current.left;
+            } else if (current.key.compareTo(key) < 0) {
+                current = current.right;
+            }
+        }
+        return null;
+    }
+
+    public Node getNode(Student key) {
+        Node current = root;
+        while (current != null) {
+            if (current.key.compareTo(key) == 0) {
+                return current;
+            }
+            if (current.key.compareTo(key) > 0) {
+                current = current.left;
+            } else if (current.key.compareTo(key) < 0) {
+                current = current.right;
+            }
+        }
+        return null;
+    }
+
+    private List<Node> getArray(Node node) {
+        ArrayList<Node> nodes = new ArrayList<>();
+        if(node==null) {
+            return nodes;
+        }
+        if(node.left != null) {
+            nodes.addAll(getArray(node.left));
+        }
+        if(node.right != null ) {
+            nodes.addAll(getArray(node.right));
+        }
+        nodes.add(node);
+        return nodes;
+
+    }
+
+    private List<Node> array() {
+        return getArray(root);
+    }
+
+    public boolean containsValue(Integer value) {
+        List<CustomTreeMap.Node> list = array();
+        for (CustomTreeMap.Node node : list) {
+            if(node.value == value) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public boolean isEmpty() {
+        return root == null;
+    }
+
+    public void clearRoot() {
+        root = null;
+        size = 0;
+    }
+
     private void traverseInOrder(Node node) {
         if (node != null) {
             traverseInOrder(node.left);
@@ -56,144 +213,43 @@ public class CustomTreeMap{
         traverseInOrder(root);
     }
 
-    //Contains an student(key)
-    private boolean containsNodeRecursive(Node current, Student student) {
-        if (current == null) {
-            return false;
+    private Set<Student> traverseInOrderForKeys(Node node) {
+        Set<Student> set= new LinkedHashSet<>();
+        if(node==null) {
+            return set;
         }
-        if (student == current.student) {
-            return true;
-        }
-        if(student.compareTo(current.student) < 0) {
-            return containsNodeRecursive(current.left, student);
-        } else {
-            return containsNodeRecursive(current.right, student);
-        }
-        /*return student < current.student
-                ? containsNodeRecursive(current.left, student)
-                : containsNodeRecursive(current.right, student);*/
-    }
-
-    public boolean containsNode(Student student) {
-        return containsNodeRecursive(root, student);
-    }
-
-    //Delete a node
-    private Node deleteRecursive(Node current, Student student) {
-        if (current == null) {
-            return null;
-        }
-
-        if (student == current.student) {
-            // Node to delete found
-
-            //1. The node has no children
-            if (current.left == null && current.right == null) {
-                return null;
-            }
-
-            //2. The node has one child
-            // ??
-            if (current.right == null) {
-                return current.left;
-            }
-
-            if (current.left == null) {
-                return current.right;
-            }
-
-
-            //3. The node has two children
-            Student smallestValue = findSmallestValue(current.right);
-            current.student = smallestValue;
-            current.right = deleteRecursive(current.right, smallestValue);
-            return current;
-        }
-
-        if(student.compareTo(current.student) < 0) {
-            current.left = deleteRecursive(current.left, student);
-        } else {
-            current.right = deleteRecursive(current.right, student);
-        }
-        return current;
-
-
-    }
-
-
-    public void delete(Student student) {
-        root = deleteRecursive(root, student);
-    }
-    //Smallest Student
-    private Student findSmallestValue(Node root) {
-        return root.left == null ? root.student : findSmallestValue(root.left);
-    }
-
-    public boolean isEmpty() {
-        return root == null;
-    }
-
-    private boolean traversePreOrderForContainsValue(Node node, Integer value) {
-       //Not working
+        set.add(node.key);
         if (node != null) {
-            if (node.student.getAges().equals(value)) {
-                return true;
-            }
-            traversePreOrderForContainsValue(node.left, value);
-            traversePreOrderForContainsValue(node.right, value);
-
-
+            set.addAll(traverseInOrderForKeys(node.left));
+            set.addAll(traverseInOrderForKeys(node.right));
         }
-        return false;
+
+        return set;
     }
 
-    public boolean containsValue(Integer value) {
-        return traversePreOrderForContainsValue(root, value);
+
+    public Set<Student> keySet() {
+        return traverseInOrderForKeys(root);
     }
 
-    private void traverseInOrderForKeys(Node node) {
+    private Collection<Integer> traverseInOrderForValues(Node node) {
+        Collection<Integer> coll= new ArrayList<>();
+        if(node==null) {
+            return coll;
+        }
+        coll.add(node.value);
         if (node != null) {
-            traverseInOrderForKeys(node.left);
-            setForKeys.add(node.student);
-            traverseInOrderForKeys(node.right);
+            coll.addAll(traverseInOrderForValues(node.left));
+            coll.addAll(traverseInOrderForValues(node.right));
         }
-    }
 
-    public LinkedHashSet<Student> traverseForKeys() {
-        setForKeys = new LinkedHashSet<>();
-        traverseInOrderForKeys(root);
-        return setForKeys;
+        return coll;
     }
 
 
-    private void traverseInOrderForValues(Node node) {
-        if (node != null) {
-            traverseInOrderForValues(node.left);
-            collectionForValues.add(node.age);
-            traverseInOrderForValues(node.right);
-        }
+    public Collection<Integer> values() {
+        return traverseInOrderForValues(root);
     }
 
-    public Collection<Integer> traverseForValues() {
-        collectionForValues = new LinkedHashSet<>();
-        traverseInOrderForValues(root);
-        return collectionForValues;
-    }
-
-    private void traverseForSize(Node node) {
-        if (node != null) {
-            size += 1;
-            traverseForSize(node.left);
-            traverseForSize(node.right);
-        }
-    }
-
-    public int size() {
-        if (changedSize) {
-            size = 0;
-            traverseForSize(root);
-        }
-        return size;
-    }
 
 }

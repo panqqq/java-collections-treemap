@@ -2,7 +2,6 @@ package com.endava.internship.collections;
 
 
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -10,11 +9,17 @@ public class StudentMap implements Map<Student, Integer> {
     private CustomTreeMap customTreeMap = new CustomTreeMap();
 
 
-
+    //Constructs a new, empty tree map, using the natural ordering of its keys.
     public StudentMap() {
 
     }
+    //Constructs a new tree map containing the same mappings as the given map, ordered according to the natural ordering of its keys.
+    public StudentMap(Map<? extends Student, ? extends Integer> map) {
+        putAll(map);
+    }
+    //Constructs a new, empty tree map, ordered according to the given comparator.
 
+    //Constructs a new tree map containing the same mappings and using the same ordering as the specified sorted map.
 
     @Override
     public int size() {
@@ -23,69 +28,69 @@ public class StudentMap implements Map<Student, Integer> {
 
     @Override
     public boolean isEmpty() {
-        //TODO
-        // - Done
         return customTreeMap.isEmpty();
     }
 
     @Override
     public boolean containsKey(Object o) {
-        //TODO
-        Student student = (Student) o;
-        return customTreeMap.containsNode(student);
+        validateNullPointerException(o);
+        validateClassCastException(o);
+        Student key = (Student) o;
+        return customTreeMap.containsKey(key);
     }
 
     @Override
     public boolean containsValue(Object o) {
-        //TODO
         Integer value = (Integer) o;
-        //!!
-        return false;
+        return customTreeMap.containsValue(value);
     }
 
     @Override
     public Integer get(Object o) {
-        //TODO
-        return null;
+        validateNullPointerException(o);
+        validateClassCastException(o);
+        Student key = (Student) o;
+        return customTreeMap.get(key);
     }
 
     @Override
     public Integer put(Student student, Integer integer) {
-        //TODO
-        return customTreeMap.put(student,integer);
+        validateNullPointerException(student);
+        validateClassCastException(student);
+        return customTreeMap.addToNode(student, integer);
     }
 
     @Override
     public Integer remove(Object o) {
-        //TODO
+        validateNullPointerException(o);
+        validateClassCastException(o);
         Student student = (Student) o;
-
-        return null;
+        return customTreeMap.delete(student);
     }
 
     @Override
     public void putAll(Map<? extends Student, ? extends Integer> map) {
-        //TODO
+        if(map == null) {
+          throw new NullPointerException();
+        }
+        for (Entry<? extends Student, ? extends Integer> entry : map.entrySet()) {
+            put(entry.getKey(), entry.getValue());
+        }
     }
 
     @Override
     public void clear() {
-        //TODO
-        customTreeMap = new CustomTreeMap();
+        customTreeMap.clearRoot();
     }
 
     @Override
     public Set<Student> keySet() {
-        //TODO
-        LinkedHashSet<Student> set = customTreeMap.traverseForKeys();
-        return set;
+        return customTreeMap.keySet();
     }
 
     @Override
     public Collection<Integer> values() {
-        //TODO
-        Collection<Integer> set = customTreeMap.traverseForValues();
-        return set;
+        return customTreeMap.values();
     }
 
     @Override
@@ -97,5 +102,26 @@ public class StudentMap implements Map<Student, Integer> {
     public void traverse() {
         customTreeMap.traverse();
     }
-}
 
+    private static void validateNullPointerException(Object o) {
+        if(o == null) {
+            throw new NullPointerException();
+        }
+    }
+
+    private static void validateClassCastException(Object o) {
+        if(!(o instanceof Student)) {
+            throw new ClassCastException();
+        }
+    }
+
+    public static class NullPointerException extends RuntimeException {
+
+    }
+
+    public static class ClassCastException extends RuntimeException {
+
+    }
+
+
+}
