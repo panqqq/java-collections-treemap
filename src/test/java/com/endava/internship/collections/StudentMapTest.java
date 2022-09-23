@@ -30,7 +30,7 @@ public class StudentMapTest {
         otherStudent = new Student("Ryan Brown", LocalDate.of(1978,3,4),"Details other");
         stMap = new StudentMap();
     }
-    //TODO size
+
     @Test
     public void afterOnePut_StudentMapSizeShouldBeOne() {
         //Act
@@ -71,7 +71,7 @@ public class StudentMapTest {
         //Assert
         assertEquals(0, stMap.size());
     }
-    //TODO isEmpty()
+
     @Test
     public void newlyCreatedMap_ShouldBeEmpty() {
         assertTrue(stMap.isEmpty());
@@ -109,8 +109,6 @@ public class StudentMapTest {
         assertTrue(stMap.isEmpty());
     }
 
-
-    //TODO ContainsKey
     @DisplayName("Add students add check if map contains key")
     @ParameterizedTest
     @MethodSource("studentList")
@@ -155,7 +153,6 @@ public class StudentMapTest {
         assertThrows(StudentMap.ClassCastException.class, () -> stMap.containsKey(name));
     }
 
-    //TODO containsValue
     @DisplayName("Add students add check if map contains value")
     @ParameterizedTest
     @MethodSource("studentList")
@@ -195,7 +192,6 @@ public class StudentMapTest {
         return Arrays.asList(s1,s2,s3);
     }
 
-    //TODO GET
     @Test
     public void checkValueOfAddedStudent() {
         //Act
@@ -232,7 +228,6 @@ public class StudentMapTest {
         );
     }
 
-    //TODO PUT
     @Test
     public void whenPutANewStudent_MethodReturnsNull() {
         assertNull(stMap.put(newStudent, newStudent.getAges()));
@@ -287,7 +282,6 @@ public class StudentMapTest {
         assertThrows(StudentMap.NullPointerException.class, () -> stMap.put(null,30));
     }
 
-    //TODO remove
     @Test
     public void whenRemoveAKeyReturnValue() {
         //Act
@@ -343,7 +337,6 @@ public class StudentMapTest {
         );
     }
 
-    //TODO putAll
     @Test
     public void afterPutAll_ObjectsShouldBeAdded() {
         //Arrange
@@ -404,7 +397,6 @@ public class StudentMapTest {
         assertThrows(StudentMap.NullPointerException.class, () -> stMap.putAll(map));
     }
 
-    //TODO clear()
     @Test
     public void whenClear_SizeShouldBeZero() {
         //Act
@@ -426,7 +418,6 @@ public class StudentMapTest {
         assertTrue(stMap.isEmpty());
     }
 
-    //TODO keySet()
     @Test
     public void whenPutTwoStudentsInMapSizeOfKeySetShouldBeTwo() {
         //Arrange
@@ -456,7 +447,6 @@ public class StudentMapTest {
         assertTrue(stMap.keySet().contains(s2));
     }
 
-    //TODO values()
     @Test
     public void whenPutTwoStudentsInMapSizeOfValuesCollectionShouldBeTwo() {
         //Arrange
