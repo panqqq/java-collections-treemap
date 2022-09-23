@@ -33,8 +33,8 @@ public class StudentMap implements Map<Student, Integer> {
 
     @Override
     public boolean containsKey(Object o) {
-        validateNullPointerException(o);
-        validateClassCastException(o);
+        checkIfObjectIsNull(o);
+        checkIfObjectIsStudent(o);
         Student key = (Student) o;
         return customTreeMap.containsKey(key);
     }
@@ -47,23 +47,23 @@ public class StudentMap implements Map<Student, Integer> {
 
     @Override
     public Integer get(Object o) {
-        validateNullPointerException(o);
-        validateClassCastException(o);
+        checkIfObjectIsNull(o);
+        checkIfObjectIsStudent(o);
         Student key = (Student) o;
         return customTreeMap.get(key);
     }
 
     @Override
     public Integer put(Student student, Integer integer) {
-        validateNullPointerException(student);
-        validateClassCastException(student);
+        checkIfObjectIsNull(student);
+        checkIfObjectIsStudent(student);
         return customTreeMap.addToNode(student, integer);
     }
 
     @Override
     public Integer remove(Object o) {
-        validateNullPointerException(o);
-        validateClassCastException(o);
+        checkIfObjectIsNull(o);
+        checkIfObjectIsStudent(o);
         Student student = (Student) o;
         return customTreeMap.delete(student);
     }
@@ -103,13 +103,13 @@ public class StudentMap implements Map<Student, Integer> {
         customTreeMap.traverse();
     }
 
-    private static void validateNullPointerException(Object o) {
+    private static void checkIfObjectIsNull(Object o){
         if(o == null) {
             throw new NullPointerException();
         }
     }
 
-    private static void validateClassCastException(Object o) {
+    private static void checkIfObjectIsStudent(Object o) {
         if(!(o instanceof Student)) {
             throw new ClassCastException();
         }
